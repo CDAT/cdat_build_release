@@ -24,6 +24,7 @@ aliases:
        version=`cat $WORKDIR/pkginfo | awk -F: '{ print $1 }'`
        build=`cat $WORKDIR/pkginfo | awk -F: '{ print $2 }'`
        python $BUILD_SCRIPT -w $WORKDIR -v $version -B $build -p $PKG_NAME --do_rerender
+    no_output_timeout: 30m
 
   - &conda_build
     name: conda_build
