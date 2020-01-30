@@ -240,7 +240,7 @@ workflows:
          - macos_vcsaddons_upload:
               requires:
                  - macos_vcsaddons_py2
-                 - macos_vcsaddons_py3
+                 - macos_vcsaddons_py37
 
          - linux_vcsaddons_rerender:
               requires:
@@ -254,4 +254,4 @@ workflows:
          - linux_vcsaddons_upload:
               requires:
                  - linux_vcsaddons_py2
-                 - linux_vcsaddons_py3
+                 - linux_vcsaddons_py37
