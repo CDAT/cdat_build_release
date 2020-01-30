@@ -23,7 +23,7 @@ aliases:
        python $GET_RELEASE_INFO -r $CDAT_VERSION -t cdat -p $PKG_NAME -f $RELEASE_INFO > $WORKDIR/pkginfo
        version=`cat $WORKDIR/pkginfo | awk -F: '{ print $1 }'`
        build=`cat $WORKDIR/pkginfo | awk -F: '{ print $2 }'`
-       python $BUILD_SCRIPT -w $WORKDIR -v $version -B $build -p $PKG_NAME -b $CIRCLE_BRANCH --do_rerender
+       python $BUILD_SCRIPT -w $WORKDIR -v $version -B $build -p $PKG_NAME --do_rerender
 
   - &conda_build
     name: conda_build
