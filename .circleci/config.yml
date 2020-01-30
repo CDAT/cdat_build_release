@@ -92,6 +92,7 @@ jobs:
          BUILD_VARIANT_VER: "noarch"
       steps:
          - checkout
+         - run: pwd
          - run: *setup_miniconda
          - run: *conda_rerender
          - run: *conda_build
