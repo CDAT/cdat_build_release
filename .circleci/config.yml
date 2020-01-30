@@ -20,7 +20,7 @@ aliases:
        RELEASE_INFO="$WORKDIR/conda-recipes/release_info/release_info.json"
        BUILD_SCRIPT="$WORKDIR/conda-recipes/build_tools/conda_build.py"
        GET_RELEASE_INFO="$WORKDIR/conda-recipes/build_tools/get_release_info.py"
-       $GET_RELEASE_INFO -r $CDAT_VERSION -t cdat -p $PKG_NAME -f $RELEASE_INFO > $WORKDIR/pkginfo
+       python $GET_RELEASE_INFO -r $CDAT_VERSION -t cdat -p $PKG_NAME -f $RELEASE_INFO > $WORKDIR/pkginfo
        version=`cat $WORKDIR/pkginfo | awk -F: '{ print $1 }'`
        build=`cat $WORKDIR/pkginfo | awk -F: '{ print $2 }'`
        python $BUILD_SCRIPT -w $WORKDIR -v $version -B $build -p $PKG_NAME -b $CIRCLE_BRANCH --do_rerender
