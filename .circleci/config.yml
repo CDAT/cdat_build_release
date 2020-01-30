@@ -88,7 +88,7 @@ jobs:
          WORKDIR: /home/circleci/project/linux_build
          PKG_NAME: "dv3d"
          CDAT_VERSION: "8.2.1"
-         BUILD_VARIANT_VER: "noarch"
+         BUILD_VARIANT_VERSION: "noarch"
       steps:
          - checkout
          - run: pwd
@@ -122,7 +122,7 @@ jobs:
       environment:
          WORKDIR: /Users/distiller/project/macos_build
          PKG_NAME: "vcsaddons"
-         BUILD_VARIANT_VER: "2.7"
+         BUILD_VARIANT_VERSION: "2.7"
       steps:
          - attach_workspace:
               at: .
@@ -138,7 +138,7 @@ jobs:
       environment:
          WORKDIR: /Users/distiller/project/macos_build
          PKG_NAME: "vcsaddons"
-         BUILD_VARIANT_VER: "3.7"
+         BUILD_VARIANT_VERSION: "3.7"
       steps:
          - attach_workspace:
               at: .
@@ -182,7 +182,7 @@ jobs:
       environment:
          WORKDIR: /home/circleci/project/linux_build
          PKG_NAME: "vcsaddons"
-         BUILD_VARIANT_VER: "2.7"
+         BUILD_VARIANT_VERSION: "2.7"
       steps:
          - attach_workspace:
               at: .
@@ -198,7 +198,7 @@ jobs:
       environment:
          WORKDIR: /home/circleci/project/linux_build
          PKG_NAME: "vcsaddons"
-         BUILD_VARIANT_VER: "3.7"
+         BUILD_VARIANT_VERSION: "3.7"
       steps:
          - attach_workspace:
               at: .
