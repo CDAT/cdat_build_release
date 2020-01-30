@@ -1,0 +1,111 @@
+version: 2
+
+aliases:
+  - &setup_miniconda
+    name: setup_miniconda
+    command: |
+       mkdir -p workspace
+       git clone -b validateNightly git@github.com:CDAT/cdat workspace/cdat
+       # install_miniconda.py installs miniconda3 under $WORKDIR/miniconda
+       python workspace/cdat/scripts/install_miniconda.py -w $WORKDIR -p 'py3'
+
+  - &conda_rerender
+    name: conda_rerender
+    command: |
+       # REVISIT - use 'master' branch once merged
+       git clone -b release_process https://github.com/CDAT/conda-recipes.git $WORKDIR/conda-recipes 
+       source $WORKDIR/miniconda/etc/profile.d/conda.sh
+       conda activate base
+
+       RELEASE_INFO="$WORKDIR/conda-recipes/release_info/release_info.json"
+       BUILD_SCRIPT="$WORKDIR/conda-recipes/build_tools/conda_build.py"
+       GET_RELEASE_INFO="$WORKDIR/conda-recipes/build_tools/get_release_info.py"
+       $GET_RELEASE_INFO -r $CDAT_VERSION -t cdat -p $PKG_NAME -f $RELEASE_INFO > $WORKDIR/pkginfo
+       version=`cat $WORKDIR/pkginfo | awk -F: '{ print $1 }'`
+       build=`cat $WORKDIR/pkginfo | awk -F: '{ print $2 }'`
+       python $BUILD_SCRIPT -w $WORKDIR -v $version -B $build -p $PKG_NAME -b $CIRCLE_BRANCH --do_rerender
+
+  - &conda_build
+    name: conda_build
+    command: |
+       source $WORKDIR/miniconda/etc/profile.d/conda.sh
+       conda activate base
+       conda config --add channels conda-forge --force
+       conda config --add channels cdat/label/nightly --force
+       conda config --set channel_priority strict
+       BUILD_SCRIPT="$WORKDIR/conda-recipes/build_tools/conda_build.py"
+       type=`cat $WORKDIR/pkginfo | awk -F: '{ print $3 }'`
+       if [ $type == 'noarch' ]; then
+          python $BUILD_SCRIPT -w $WORKDIR -p $PKG_NAME --build_version $type --do_build
+       else
+          python $BUILD_SCRIPT -w $WORKDIR -p $PKG_NAME --build_version $BUILD_VARIANT_VERSION --do_build
+       fi
+
+  - &conda_upload
+    name: conda_upload
+    command: |
+       if [[ $CIRCLE_BRANCH != "master" ]]; then
+          exit 0
+       fi
+       source $WORKDIR/miniconda/etc/profile.d/conda.sh
+       conda activate base
+       UPLOAD_OPTIONS="-t $CONDA_UPLOAD_TOKEN upload -u $USER -l $LABEL"
+       $version=`cat $WORKDIR/pkginfo | awk -F: '{ print $1 }'`
+       echo "anaconda $UPLOAD_OPTIONS $WORKDIR/miniconda/conda-bld/noarch/$PKG_NAME-$VERSION.`date +%Y*`0.tar.bz2 --force"
+       anaconda $UPLOAD_OPTIONS $WORKDIR/miniconda/conda-bld/noarch/$PKG_NAME-$version.`date +%Y*`0.tar.bz2 --force
+
+jobs:
+   macos_setup:
+      macos:
+         xcode: "11.3.0"
+      environment:
+         WORKDIR: /Users/distiller/project/macos_build
+      steps:
+         - checkout
+         - run: *setup_miniconda
+         - persist_to_workspace:
+              root: .
+              paths: 
+                 - macos_build
+
+   linux_setup:
+      machine:
+         image: circleci/classic:latest
+      environment:
+         WORKDIR: /home/circleci/project/linux_build
+      steps:
+         - checkout
+         - run: *setup_miniconda
+         - persist_to_workspace:
+              root: .
+              paths:
+                 - linux_build
+
+   noarch_build:
+      machine:
+         image: circleci/classic:latest
+      environment:
+         WORKDIR: /home/circleci/project/linux_build
+         PKG_NAME: "dv3d"
+         REPO_NAME: "dv3d"
+         CDAT_VERSION: "8.2.1"
+         BUILD_VARIANT_VER: "noarch"
+      steps:
+         - checkout
+         - run: *setup_miniconda
+         - run: *conda_rerender
+         - run: *conda_build
+         - persist_to_workspace:
+              root: .
+              paths: 
+                 - linux_build
+
+workflows:
+   version: 2
+   cdat:
+      jobs:
+         #- macos_setup
+         - linux_setup
+         - noarch_build:
+              requires:
+                 - linux_setup
