@@ -244,16 +244,16 @@ workflows:
                  - macos_vcsaddons_py2
                  - macos_vcsaddons_py37
 
-         #- linux_vcsaddons_rerender:
-         #     requires:
-         #        - linux_setup
-         #- linux_vcsaddons_py2:
-         #     requires:
-         #        - linux_vcsaddons_rerender
-         #- linux_vcsaddons_py37:
-         #     requires:
-         #        - linux_vcsaddons_rerender
-         #- linux_vcsaddons_upload:
-         #     requires:
-         #        - linux_vcsaddons_py2
-         #        - linux_vcsaddons_py37
+         - linux_vcsaddons_rerender:
+              requires:
+                 - linux_setup
+         - linux_vcsaddons_py2:
+              requires:
+                 - linux_vcsaddons_rerender
+         - linux_vcsaddons_py37:
+              requires:
+                 - linux_vcsaddons_rerender
+         - linux_vcsaddons_upload:
+              requires:
+                 - linux_vcsaddons_py2
+                 - linux_vcsaddons_py37
