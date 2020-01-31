@@ -128,10 +128,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *conda_build
-         - persist_to_workspace:
-              root: .
-              paths: 
-                 - macos_build
+         - run: *conda_upload
 
    macos_vcsaddons_py37:
       macos:
@@ -144,22 +141,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *conda_build
-         - persist_to_workspace:
-              root: .
-              paths: 
-                 - macos_build
-
-   macos_vcsaddons_upload:
-      macos:
-         xcode: "11.3.0"
-      environment:
-         WORKDIR: /Users/distiller/project/macos_build
-         PKG_NAME: "vcsaddons"
-         ARCH: "osx-64"
-      steps:
-         - attach_workspace:
-              at: .
          - run: *conda_upload
+
 
    linux_vcsaddons_rerender:
       machine:
@@ -188,10 +171,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *conda_build
-         - persist_to_workspace:
-              root: .
-              paths: 
-                 - linux_build
+         - run: *conda_upload
 
    linux_vcsaddons_py37:
       machine:
@@ -204,21 +184,6 @@ jobs:
          - attach_workspace:
               at: .
          - run: *conda_build
-         - persist_to_workspace:
-              root: .
-              paths: 
-                 - linux_build
-
-   linux_vcsaddons_upload:
-      machine:
-         image: circleci/classic:latest
-      environment:
-         WORKDIR: /home/circleci/project/linux_build
-         PKG_NAME: "vcsaddons"
-         ARCH: "linux-64"
-      steps:
-         - attach_workspace:
-              at: .
          - run: *conda_upload
 
 workflows:
@@ -239,10 +204,6 @@ workflows:
          - macos_vcsaddons_py37:
               requires:
                  - macos_vcsaddons_rerender
-         - macos_vcsaddons_upload:
-              requires:
-                 - macos_vcsaddons_py2
-                 - macos_vcsaddons_py37
 
          - linux_vcsaddons_rerender:
               requires:
@@ -253,7 +214,3 @@ workflows:
          - linux_vcsaddons_py37:
               requires:
                  - linux_vcsaddons_rerender
-         - linux_vcsaddons_upload:
-              requires:
-                 - linux_vcsaddons_py2
-                 - linux_vcsaddons_py37
