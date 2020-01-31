@@ -24,7 +24,7 @@ aliases:
        version=`cat $WORKDIR/pkginfo | awk -F: '{ print $1 }'`
        build=`cat $WORKDIR/pkginfo | awk -F: '{ print $2 }'`
        python $BUILD_SCRIPT -w $WORKDIR -v $version -B $build -p $PKG_NAME --do_rerender
-    no_output_timeout: 30m
+    no_output_timeout: 60m
 
   - &conda_build
     name: conda_build
@@ -53,6 +53,7 @@ aliases:
        UPLOAD_OPTIONS="-t $CONDA_UPLOAD_TOKEN upload -u $USER -l $LABEL"
        $version=`cat $WORKDIR/pkginfo | awk -F: '{ print $1 }'`
        anaconda $UPLOAD_OPTIONS $WORKDIR/miniconda/conda-bld/$ARCH/$PKG_NAME-$version.`date +%Y*`0.tar.bz2 --force
+    no_output_timeout: 120m
 
 jobs:
    macos_setup:
