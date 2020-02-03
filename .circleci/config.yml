@@ -44,6 +44,9 @@ aliases:
 
   - &conda_upload
     name: conda_upload
+    environment:
+       USER: "cdat"
+       LABEL: "v82"
     command: |
        #if [[ $CIRCLE_BRANCH != "master" ]]; then
        #   exit 0
@@ -51,7 +54,8 @@ aliases:
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
        UPLOAD_OPTIONS="-t $CONDA_UPLOAD_TOKEN upload -u $USER -l $LABEL"
-       $version=`cat $WORKDIR/pkginfo | awk -F: '{ print $1 }'`
+       version=`cat $WORKDIR/pkginfo | awk -F: '{ print $1 }'`
+       echo "anaconda blahblah $WORKDIR/miniconda/conda-bld/$ARCH/$PKG_NAME-$version.`date +%Y*`0.tar.bz2 --force"
        anaconda $UPLOAD_OPTIONS $WORKDIR/miniconda/conda-bld/$ARCH/$PKG_NAME-$version.`date +%Y*`0.tar.bz2 --force
     no_output_timeout: 120m
 
