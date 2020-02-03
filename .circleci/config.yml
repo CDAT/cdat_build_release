@@ -128,6 +128,7 @@ jobs:
          WORKDIR: /Users/distiller/project/macos_build
          PKG_NAME: "vcsaddons"
          BUILD_VARIANT_VERSION: "2.7"
+         ARCH: "osx-64"
       steps:
          - attach_workspace:
               at: .
@@ -141,6 +142,7 @@ jobs:
          WORKDIR: /Users/distiller/project/macos_build
          PKG_NAME: "vcsaddons"
          BUILD_VARIANT_VERSION: "3.7"
+         ARCH: "osx-64"
       steps:
          - attach_workspace:
               at: .
@@ -171,6 +173,7 @@ jobs:
          WORKDIR: /home/circleci/project/linux_build
          PKG_NAME: "vcsaddons"
          BUILD_VARIANT_VERSION: "2.7"
+         ARCH: "linux-64"
       steps:
          - attach_workspace:
               at: .
@@ -184,6 +187,7 @@ jobs:
          WORKDIR: /home/circleci/project/linux_build
          PKG_NAME: "vcsaddons"
          BUILD_VARIANT_VERSION: "3.7"
+         ARCH: "linux-64"
       steps:
          - attach_workspace:
               at: .
